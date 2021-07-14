@@ -63,3 +63,74 @@ const galleryItems = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+const refs = {
+  gallery: document.querySelector('ul.js-gallery'),
+  link: document.querySelector('.gallery__link'),
+  image: document.querySelector('.gallery__image'),
+  lightBox: document.querySelector('.js-lightbox'),
+  lightBoxImage: document.querySelector('.lightbox__image'),
+  lightBoxOverlay: document.querySelector('.lightbox__overlay'),
+  closeButtonModal: document.querySelector('button[data-action="close-lightbox"]')
+}
+
+const galleryItem = galleryItems.map((element) => {
+  return `<li class="gallery__item">
+        <a
+          class="gallery__link"
+          href="${element.preview}">
+          <img
+            class="gallery__image"
+            src="${element.preview}"
+            data-source="${element.original}"
+            alt="${element.description}"
+          />
+        </a>
+      </li>`
+});
+
+refs.gallery.innerHTML = galleryItem.join('');
+
+
+
+
+refs.gallery.addEventListener('click', onGalleryClick);
+refs.closeButtonModal.addEventListener('click', galleryModalClose);
+refs.lightBoxOverlay.addEventListener('click', onOverlayClick);
+
+
+function onGalleryClick(event) {  
+  event.preventDefault();
+  galleryModalOpen();
+// *здесь сделать замыкание
+
+  refs.lightBoxImage.setAttribute('src', event.target.dataset.source)
+  // console.log(event.target.dataset.source);
+
+};
+
+function onModalKeyPress(event) {
+  console.log(event.code);
+  if (event.code === 'Escape') {
+    galleryModalClose()
+  }
+}
+
+function onOverlayClick(event) {
+  if (event.currentTarget === event.target) {
+    galleryModalClose()
+  }
+}
+
+function galleryModalOpen() {
+  refs.lightBox.classList.add('is-open')
+  document.addEventListener('keydown', onModalKeyPress)
+}
+
+
+
+function galleryModalClose() {
+  refs.lightBox.classList.remove('is-open')
+  refs.lightBoxImage.setAttribute('src', '')
+  document.removeEventListener('keydown', onModalKeyPress)
+}
