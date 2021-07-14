@@ -74,7 +74,9 @@ const refs = {
   closeButtonModal: document.querySelector('button[data-action="close-lightbox"]')
 }
 
-const galleryItem = galleryItems.map((element) => {
+let imageIndex;
+
+const galleryItem = galleryItems.map((element, index) => {
   return `<li class="gallery__item">
         <a
           class="gallery__link"
@@ -84,6 +86,7 @@ const galleryItem = galleryItems.map((element) => {
             src="${element.preview}"
             data-source="${element.original}"
             alt="${element.description}"
+            data-index="${index}"
           />
         </a>
       </li>`
@@ -101,42 +104,35 @@ refs.lightBoxOverlay.addEventListener('click', onOverlayClick);
 
 function onGalleryClick(event) {  
   event.preventDefault();
-  galleryModalOpen();
-
-let activeEvent = event.target
-  // let nextEvent = activeEvent
-  //   .parentNode
-  //   .parentNode
-  //   .nextElementSibling
-  //   .lastElementChild
-  //   .lastElementChild;
+  if (event.target.nodeName !== "IMG") return;
+  galleryModalOpen();    
+  refs.lightBoxImage.setAttribute('src', event.target.dataset.source);
+  imageIndex = Number(event.target.dataset.index);
   
-  // let prevEvent = activeEvent
-  //   .parentNode
-  //   .parentNode
-  //   .previousElementSibling
-  //   .lastElementChild
-  //   .lastElementChild
-  
-  function atributset(element) {
-    
-      refs.lightBoxImage.setAttribute('src', element.dataset.source)
     }
-  //   console.log('activeEvent :>> ', activeEvent);
-  // console.log('nextEvent :>> ', nextEvent);
-  // console.log('prevEvent :>> ', prevEvent);
- atributset(activeEvent);  
-};
-   
-
-
 
 
 function onModalKeyPress(event) {
-  
-  if (event.code === 'Escape') {
-    galleryModalClose()
+    switch (event.code) {
+    case 'ArrowLeft':
+      imageIndex -= 1;
+      break;
+    case 'ArrowRight':
+      imageIndex += 1;
+      break;
+    case "Escape":
+      galleryModalClose();
+      break
   }
+
+  if (imageIndex > galleryItems.length - 1) {
+    imageIndex = 0;
+  }
+  if (imageIndex < 0) {
+    imageIndex = galleryItems.length - 1;
+  }
+  refs.lightBoxImage.src = galleryItems[imageIndex].original;
+ 
   
 }
 
@@ -151,10 +147,8 @@ function galleryModalOpen() {
   document.addEventListener('keydown', onModalKeyPress)
 }
 
-
-
 function galleryModalClose() {
   refs.lightBox.classList.remove('is-open')
-  refs.lightBoxImage.setAttribute('src', '')
+  refs.lightBoxImage.src = ''
   document.removeEventListener('keydown', onModalKeyPress)
 }
