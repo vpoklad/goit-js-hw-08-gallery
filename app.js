@@ -102,18 +102,42 @@ refs.lightBoxOverlay.addEventListener('click', onOverlayClick);
 function onGalleryClick(event) {  
   event.preventDefault();
   galleryModalOpen();
-// *здесь сделать замыкание
 
-  refs.lightBoxImage.setAttribute('src', event.target.dataset.source)
-  // console.log(event.target.dataset.source);
-
+let activeEvent = event.target
+  // let nextEvent = activeEvent
+  //   .parentNode
+  //   .parentNode
+  //   .nextElementSibling
+  //   .lastElementChild
+  //   .lastElementChild;
+  
+  // let prevEvent = activeEvent
+  //   .parentNode
+  //   .parentNode
+  //   .previousElementSibling
+  //   .lastElementChild
+  //   .lastElementChild
+  
+  function atributset(element) {
+    
+      refs.lightBoxImage.setAttribute('src', element.dataset.source)
+    }
+  //   console.log('activeEvent :>> ', activeEvent);
+  // console.log('nextEvent :>> ', nextEvent);
+  // console.log('prevEvent :>> ', prevEvent);
+ atributset(activeEvent);  
 };
+   
+
+
+
 
 function onModalKeyPress(event) {
-  console.log(event.code);
+  
   if (event.code === 'Escape') {
     galleryModalClose()
   }
+  
 }
 
 function onOverlayClick(event) {
