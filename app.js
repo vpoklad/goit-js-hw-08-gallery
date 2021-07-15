@@ -132,6 +132,7 @@ function onModalKeyPress(event) {
     imageIndex = galleryItems.length - 1;
   }
   refs.lightBoxImage.src = galleryItems[imageIndex].original;
+  refs.lightBoxImage.alt = galleryItems[imageIndex].description;
  
   
 }
