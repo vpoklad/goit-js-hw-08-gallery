@@ -73,7 +73,6 @@ const refs = {
   lightBoxOverlay: document.querySelector('.lightbox__overlay'),
   closeButtonModal: document.querySelector('button[data-action="close-lightbox"]')
 }
-
 let imageIndex;
 
 const galleryItem = galleryItems.map((element, index) => {
@@ -91,10 +90,7 @@ const galleryItem = galleryItems.map((element, index) => {
         </a>
       </li>`
 });
-
-refs.gallery.innerHTML = galleryItem.join('');
-
-
+refs.gallery.insertAdjacentHTML('beforeend', galleryItem.join(''));
 
 
 refs.gallery.addEventListener('click', onGalleryClick);
@@ -105,9 +101,7 @@ refs.lightBoxOverlay.addEventListener('click', onOverlayClick);
 function onGalleryClick(event) {  
   event.preventDefault();
   if (event.target.nodeName !== "IMG") return;
-  galleryModalOpen();    
-  refs.lightBoxImage.setAttribute('src', event.target.dataset.source);
-  imageIndex = Number(event.target.dataset.index);
+  galleryModalOpen(event);
   
     }
 
@@ -143,8 +137,11 @@ function onOverlayClick(event) {
   }
 }
 
-function galleryModalOpen() {
+function galleryModalOpen(event) {
   refs.lightBox.classList.add('is-open')
+  refs.lightBoxImage.src = event.target.dataset.source;
+  refs.lightBoxImage.alt = event.target.getAttribute('alt');
+  imageIndex = Number(event.target.dataset.index);
   document.addEventListener('keydown', onModalKeyPress)
 }
 
